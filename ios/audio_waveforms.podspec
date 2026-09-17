@@ -16,8 +16,7 @@ A Flutter package that allow you to generate waveform while recording audio or f
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Simform Solutions (fork maintained by ChristopherCfly)' => 'christopher@cinefly.io' }
   s.source           = { :path => '.' }
-  s.source_files = 'audio_waveforms/Sources/audio_waveforms/**/*.{h,m,swift}'
-  s.public_header_files = 'audio_waveforms/Sources/audio_waveforms/include/*.h'
+  s.source_files = 'audio_waveforms/Sources/audio_waveforms/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '15.0'
 

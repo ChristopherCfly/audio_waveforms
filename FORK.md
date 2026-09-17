@@ -40,11 +40,13 @@ The upstream dependency on the retired ExoPlayer 2 line (`2.17.1`, years behind 
 ### iOS (`ios/`)
 
 - Added `ios/audio_waveforms/Package.swift` following the Flutter SPM plugin layout (swift-tools-version 5.9; library name `audio-waveforms`; the `FlutterFramework` path dependency is rewritten by `flutter_tools` at integration time, exactly as templated).
-- Sources moved from `ios/Classes/` to `ios/audio_waveforms/Sources/audio_waveforms/`, with the public ObjC header under `include/` (`publicHeadersPath`).
-- The podspec is **kept** so CocoaPods consumers are not broken; its `source_files`/`public_header_files` now point at the new layout.
+- Sources moved from `ios/Classes/` to `ios/audio_waveforms/Sources/audio_waveforms/`.
+- **The ObjC registration shim (`AudioWaveformsPlugin.h/.m`) was removed and the pubspec iOS `pluginClass` now points directly at the Swift class `SwiftAudioWaveformsPlugin`.** SPM does not support a target with mixed Swift and Objective-C source files ("mixed language source files; feature not supported"), and an ObjC→Swift dependency across SPM targets is not possible either. The canonical Flutter SPM pattern (see `flutter_tools`' `plugin_darwin_spm` template and `path_provider_foundation`) is a Swift plugin class: the generated registrant falls back to `@import audio_waveforms;`, which exposes the Swift `NSObject`/`FlutterPlugin` class to ObjC. This works identically under CocoaPods, so the shim was dead weight in both integrations.
+- The podspec is **kept** so CocoaPods consumers are not broken; its `source_files` now point at the new Swift-only layout.
 - Podspec deployment target raised `8.0` → **15.0** (matches consuming app; iOS 8 is not a supportable floor).
 - Podspec placeholder metadata fixed (summary/homepage/author).
 - No external native pod dependencies (unlike the `video_thumbnail` fork's libwebp entanglement), so the SPM conversion is mechanical — nothing to gate.
+- The macOS implementation (`macos/`) is untouched and keeps its own ObjC plugin class.
 
 ### Dart package
 

@@ -4,6 +4,7 @@
 - Android: `compileSdk 37`, `minSdk 24`, Java 17 `compileOptions`, Kotlin `jvmTarget 17`; removed the legacy `buildscript`/`allprojects` blocks; Gradle wrapper 9.7.1; `settings.gradle` gained `pluginManagement`/`dependencyResolutionManagement` for standalone resolution
 - Android: migrated the retired pre-Media3 player dependency to AndroidX Media3 (`media3-exoplayer` + `media3-common` 1.11.1); dropped the unnecessary `multidex` dependency
 - iOS: added Swift Package Manager support (`ios/audio_waveforms/Package.swift`); podspec deployment target raised to 15.0; podspec kept for CocoaPods consumers
+- iOS: removed the ObjC registration shim (SPM forbids mixed Swift/ObjC targets); the pubspec iOS `pluginClass` is now the Swift class `SwiftAudioWaveformsPlugin` directly (canonical SPM plugin pattern, works under CocoaPods too)
 
 ## 2.1.0 (#unreleased)
 
