@@ -1,10 +1,25 @@
 plugins {
     id "com.android.library"
-    id "org.jetbrains.kotlin.android"
 }
 
 group = 'com.simform.audio_waveforms'
 version = '1.0-SNAPSHOT'
+
+// From AGP 9 onward Kotlin can be compiled by AGP's built-in Kotlin, and
+// applying org.jetbrains.kotlin.android on top of that is a hard error. So the
+// plugin is applied only when built-in Kotlin is not in play.
+//
+// Checking android.builtInKotlin — not just the AGP major version — matters.
+// A consuming app can be on AGP 9 and still run with android.builtInKotlin=false,
+// which is exactly what Flutter 3.47's own project template ships. Gating on
+// `agpMajor < 9` alone (as stripe_android does) leaves jvmTarget unset in that
+// combination, so the module's Kotlin target silently tracks the JDK running
+// Gradle instead of the Java 17 declared below.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = project.findProperty('android.builtInKotlin')?.toString()?.toBoolean() ?: false
+if (agpMajor < 9 || !builtInKotlin) {
+    apply plugin: 'kotlin-android'
+}
 
 android {
     namespace "com.simform.audio_waveforms"
@@ -16,16 +31,23 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
         minSdk 24
+    }
+}
+
+// Only meaningful while KGP is applied. Under built-in Kotlin, AGP derives the
+// JVM target from compileOptions.targetCompatibility above, and the `kotlin`
+// extension this block configures does not exist.
+if (agpMajor < 9 || !builtInKotlin) {
+    kotlin {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        }
     }
 }
 

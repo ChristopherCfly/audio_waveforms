@@ -26,6 +26,22 @@ Consumed by the app as a **direct dependency** pinned to a full commit SHA (unli
 
 The `plugins {}` block is now the first statement in `android/build.gradle` (group/version below it), as required when the consuming app's AGP is injected via `pluginManagement`.
 
+#### Built-in Kotlin gate (consuming-app issue #905)
+
+`org.jetbrains.kotlin.android` is no longer applied unconditionally. From AGP 9 onward Kotlin may be compiled by AGP's **built-in Kotlin**, and applying KGP on top of that is a hard error. The apply is now guarded:
+
+```groovy
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = project.findProperty('android.builtInKotlin')?.toString()?.toBoolean() ?: false
+if (agpMajor < 9 || !builtInKotlin) {
+    apply plugin: 'kotlin-android'
+}
+```
+
+The `android.builtInKotlin` half of that condition is the part that matters. Gating on `agpMajor < 9` alone — which is what `stripe_android` 14.0.x does — is not enough, because a consuming app can be on AGP 9 while still running `android.builtInKotlin=false`. That is precisely what Flutter 3.47's own `flutter create` template ships. In that combination the guarded-out module leaves `jvmTarget` unset, KGP lets it track the JDK running Gradle, and AGP 9's target-consistency validation fails the consumer's build.
+
+The `kotlinOptions { jvmTarget = '17' }` block that lived inside `android {}` was replaced with a guarded `kotlin { compilerOptions { jvmTarget } }` block outside it, for the same reason: under built-in Kotlin the `kotlin` extension does not exist, and AGP derives the target from `compileOptions.targetCompatibility` instead.
+
 **Standalone module builds are not fully supported** (same as upstream): the plugin compiles against `io.flutter:flutter_embedding_*` and the androidx classpath supplied by the consuming Flutter app. Verification is done through the consuming app's build (`flutter build appbundle`), not `cd android && ./gradlew assemble`. The `settings.gradle` `pluginManagement`/`dependencyResolutionManagement` blocks are provided so tooling that resolves the module in isolation still finds repositories (AGP 9's injected `kotlin-stdlib` needs a declared resolver).
 
 ### Media3 migration decision record
