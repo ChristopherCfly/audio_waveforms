@@ -1,6 +1,7 @@
 import Foundation
 
 import AVKit
+import Flutter
 
 class AudioPlayer: NSObject, AVAudioPlayerDelegate {
     private var seekToStart = true
