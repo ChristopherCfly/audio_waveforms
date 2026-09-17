@@ -1,3 +1,10 @@
+## 2.0.3 (Cinefly fork)
+
+- Fork of upstream 2.0.2, modernised for AGP 9 and Swift Package Manager (see FORK.md)
+- Android: `compileSdk 37`, `minSdk 24`, Java 17 `compileOptions`, Kotlin `jvmTarget 17`; removed the legacy `buildscript`/`allprojects` blocks; Gradle wrapper 9.7.1; `settings.gradle` gained `pluginManagement`/`dependencyResolutionManagement` for standalone resolution
+- Android: migrated the retired pre-Media3 player dependency to AndroidX Media3 (`media3-exoplayer` + `media3-common` 1.11.1); dropped the unnecessary `multidex` dependency
+- iOS: added Swift Package Manager support (`ios/audio_waveforms/Package.swift`); podspec deployment target raised to 15.0; podspec kept for CocoaPods consumers
+
 ## 2.1.0 (#unreleased)
 
 - Feature [#468](https://github.com/SimformSolutionsPvtLtd/audio_waveforms/pull/468) - Add macOS support
