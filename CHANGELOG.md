@@ -5,6 +5,7 @@
 - Android: migrated the retired pre-Media3 player dependency to AndroidX Media3 (`media3-exoplayer` + `media3-common` 1.11.1); dropped the unnecessary `multidex` dependency
 - iOS: added Swift Package Manager support (`ios/audio_waveforms/Package.swift`); podspec deployment target raised to 15.0; podspec kept for CocoaPods consumers
 - iOS: removed the ObjC registration shim (SPM forbids mixed Swift/ObjC targets); the pubspec iOS `pluginClass` is now the Swift class `SwiftAudioWaveformsPlugin` directly (canonical SPM plugin pattern, works under CocoaPods too)
+- iOS: added explicit `import Flutter` to the Swift files that used Flutter symbols via the CocoaPods umbrella header (required under SPM)
 
 ## 2.1.0 (#unreleased)
 

@@ -46,6 +46,7 @@ The upstream dependency on the retired ExoPlayer 2 line (`2.17.1`, years behind 
 - Podspec deployment target raised `8.0` → **15.0** (matches consuming app; iOS 8 is not a supportable floor).
 - Podspec placeholder metadata fixed (summary/homepage/author).
 - No external native pod dependencies (unlike the `video_thumbnail` fork's libwebp entanglement), so the SPM conversion is mechanical — nothing to gate.
+- Four Swift files (`AudioPlayer.swift`, `AudioRecorder.swift`, `RecorderBytesStreamEngine.swift`, `WaveformExtractor.swift`) had `import Flutter` added: under CocoaPods they received Flutter symbols implicitly through the pod's ObjC umbrella header (underlying-module import); SPM has no such mechanism, so each file referencing `FlutterError`/`FlutterMethodChannel` must import Flutter explicitly.
 - The macOS implementation (`macos/`) is untouched and keeps its own ObjC plugin class.
 
 ### Dart package
