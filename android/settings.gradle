@@ -1,1 +1,28 @@
+// Plugin resolution for standalone builds of this directory
+// (`cd android && ./gradlew assemble`). When the plugin is consumed by a
+// Flutter app, the app's own settings.gradle governs and this file is ignored,
+// so the versions pinned here only affect standalone verification.
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    plugins {
+        id "com.android.library" version "9.4.0"
+        id "org.jetbrains.kotlin.android" version "2.4.20"
+    }
+}
+
+// Dependency repositories for standalone builds (AGP 9 injects
+// org.jetbrains.kotlin:kotlin-stdlib, which needs a resolver). When this
+// plugin is consumed by a Flutter app, the app's settings.gradle governs and
+// this block is ignored.
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 rootProject.name = 'audio_waveforms'

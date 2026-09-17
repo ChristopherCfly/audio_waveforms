@@ -11,11 +11,10 @@
 build/
 
 # Android related
-**/android/**/gradle-wrapper.jar
+# The Gradle wrapper (gradlew, gradlew.bat, gradle-wrapper.jar) is tracked so
+# standalone builds work from a fresh clone; upstream ignored it.
 **/android/.gradle
 **/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 
